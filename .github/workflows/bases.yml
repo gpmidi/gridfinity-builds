@@ -20,10 +20,6 @@ jobs:
           repository: kennetek/gridfinity-rebuilt-openscad
           path: gridfinity-rebuilt-openscad
 
-      - name: Create output folder if needed
-        run: |
-          mkdir -p stls
-
       - id: set-matrix
         run: |
           echo -n 'matrix='  >> $GITHUB_OUTPUT
@@ -37,15 +33,18 @@ jobs:
         pset: "${{ fromJSON(needs.setup.outputs.matrix) }}"
 
     steps:
+      - name: Create output folder if needed
+        run: |
+          mkdir -p stls
 
       - uses: gpmidi/openscad-build-action@main
         with:
           input-file: gridfinity-rebuilt-openscad/gridfinity-rebuilt-baseplate.scad
-          output-file: "stls/base-${{ matrix.pset.key }}.stl"
+          output-file: "stls/base-${{ matrix.pset }}.stl"
           customizer-parameter-file: "params/Base.json"
-          customizer-parameter-set: "${{ matrix.pset.key }}"
+          customizer-parameter-set: "${{ matrix.pset }}"
 
       - uses: actions/upload-artifact@v4
         with:
-          name: "base-${{ matrix.pset.key }}"
-          path: "stls/base-${{ matrix.pset.key }}.stl"
+          name: "base-${{ matrix.pset }}"
+          path: "stls/base-${{ matrix.pset }}.stl"
