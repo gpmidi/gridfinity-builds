@@ -1,0 +1,89 @@
+name: Build STLs
+
+on:
+  pull_request:
+  push:
+    branches: [ master, main, develop ]
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      bases: "${{ steps.set-matrix.outputs.bases }}"
+      bins: "${{ steps.set-matrix.outputs.bins }}"
+    steps:
+      - name: Checkout build repo
+        uses: actions/checkout@v2
+
+      - id: set-matrix
+        run: |
+          echo -n 'bases='  >> $GITHUB_OUTPUT
+          cat params/Base.json | jq  -c -r '.parameterSets | keys '  >> $GITHUB_OUTPUT
+          echo -n 'bins='  >> $GITHUB_OUTPUT
+          cat params/Bins.json | jq  -c -r '.parameterSets | keys '  >> $GITHUB_OUTPUT
+
+  bases:
+    needs: [ setup ]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        pset: "${{ fromJSON(needs.setup.outputs.bases) }}"
+
+    steps:
+      - name: Checkout build repo
+        uses: actions/checkout@v2
+
+      - name: Checkout gridfinity repo
+        uses: actions/checkout@master
+        with:
+          repository: kennetek/gridfinity-rebuilt-openscad
+          path: gridfinity-rebuilt-openscad
+
+      - name: Create output folder if needed
+        run: |
+          mkdir -p stls
+
+      - uses: gpmidi/openscad-build-action@main
+        with:
+          input-file: gridfinity-rebuilt-openscad/gridfinity-rebuilt-baseplate.scad
+          output-file: "stls/base-${{ matrix.pset }}.stl"
+          customizer-parameter-file: "params/Base.json"
+          customizer-parameter-set: "${{ matrix.pset }}"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: "base-${{ matrix.pset }}"
+          path: "stls/base-${{ matrix.pset }}.stl"
+
+  bins:
+    needs: [ setup ]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        pset: "${{ fromJSON(needs.setup.outputs.bins) }}"
+
+    steps:
+      - name: Checkout build repo
+        uses: actions/checkout@v2
+
+      - name: Checkout gridfinity repo
+        uses: actions/checkout@master
+        with:
+          repository: kennetek/gridfinity-rebuilt-openscad
+          path: gridfinity-rebuilt-openscad
+
+      - name: Create output folder if needed
+        run: |
+          mkdir -p stls
+
+      - uses: gpmidi/openscad-build-action@main
+        with:
+          input-file: gridfinity-rebuilt-openscad/gridfinity-rebuilt-baseplate.scad
+          output-file: "stls/bin-${{ matrix.pset }}.stl"
+          customizer-parameter-file: "params/Bins.json"
+          customizer-parameter-set: "${{ matrix.pset }}"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: "bin-${{ matrix.pset }}"
+          path: "stls/bin-${{ matrix.pset }}.stl"
