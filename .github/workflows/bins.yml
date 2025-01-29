@@ -1,0 +1,53 @@
+name: Build Bases
+
+on:
+  pull_request:
+  push:
+    branches: [ master, main, develop ]
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: "${{ steps.set-matrix.outputs.matrix }}"
+    steps:
+      - name: Checkout build repo
+        uses: actions/checkout@v2
+
+      - id: set-matrix
+        run: |
+          echo -n 'matrix='  >> $GITHUB_OUTPUT
+          cat params/Base.json | jq  -c -r '.parameterSets | keys '  >> $GITHUB_OUTPUT
+
+  build:
+    needs: [ setup ]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        pset: "${{ fromJSON(needs.setup.outputs.matrix) }}"
+
+    steps:
+      - name: Checkout build repo
+        uses: actions/checkout@v2
+
+      - name: Checkout gridfinity repo
+        uses: actions/checkout@master
+        with:
+          repository: kennetek/gridfinity-rebuilt-openscad
+          path: gridfinity-rebuilt-openscad
+
+      - name: Create output folder if needed
+        run: |
+          mkdir -p stls
+
+      - uses: gpmidi/openscad-build-action@main
+        with:
+          input-file: gridfinity-rebuilt-openscad/gridfinity-rebuilt-baseplate.scad
+          output-file: "stls/base-${{ matrix.pset }}.stl"
+          customizer-parameter-file: "params/Base.json"
+          customizer-parameter-set: "${{ matrix.pset }}"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: "base-${{ matrix.pset }}"
+          path: "stls/base-${{ matrix.pset }}.stl"
