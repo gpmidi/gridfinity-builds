@@ -1,4 +1,4 @@
-name: Build Bases
+name: Build Bins
 
 on:
   pull_request:
@@ -17,7 +17,7 @@ jobs:
       - id: set-matrix
         run: |
           echo -n 'matrix='  >> $GITHUB_OUTPUT
-          cat params/Base.json | jq  -c -r '.parameterSets | keys '  >> $GITHUB_OUTPUT
+          cat params/Bins.json | jq  -c -r '.parameterSets | keys '  >> $GITHUB_OUTPUT
 
   build:
     needs: [ setup ]
@@ -42,12 +42,12 @@ jobs:
 
       - uses: gpmidi/openscad-build-action@main
         with:
-          input-file: gridfinity-rebuilt-openscad/gridfinity-rebuilt-baseplate.scad
-          output-file: "stls/base-${{ matrix.pset }}.stl"
-          customizer-parameter-file: "params/Base.json"
+          input-file: gridfinity-rebuilt-openscad/gridfinity-rebuilt-bins.scad
+          output-file: "stls/bin-${{ matrix.pset }}.stl"
+          customizer-parameter-file: "params/Bins.json"
           customizer-parameter-set: "${{ matrix.pset }}"
 
       - uses: actions/upload-artifact@v4
         with:
-          name: "base-${{ matrix.pset }}"
-          path: "stls/base-${{ matrix.pset }}.stl"
+          name: "bins"
+          path: "stls/bin-${{ matrix.pset }}.stl"
