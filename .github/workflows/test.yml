@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@master
         with:
           repository: kennetek/gridfinity-rebuilt-openscad
-      - uses: gpmidi/openscad-build-action@master
+      - uses: gpmidi/openscad-build-action@main
         with:
           input-file: gridfinity-rebuilt-openscad/gridfinity-rebuilt-baseplate.scad
           output-file: out/test.stl
