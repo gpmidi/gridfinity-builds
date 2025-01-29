@@ -49,5 +49,5 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: "bases"
+          name: "base-${{ matrix.pset }}"
           path: "stls/base-${{ matrix.pset }}.stl"
