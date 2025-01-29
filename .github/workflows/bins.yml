@@ -14,6 +14,12 @@ jobs:
       - name: Checkout build repo
         uses: actions/checkout@v2
 
+      - name: Checkout gridfinity repo
+        uses: actions/checkout@master
+        with:
+          repository: kennetek/gridfinity-rebuilt-openscad
+          path: gridfinity-rebuilt-openscad
+
       - id: set-matrix
         run: |
           echo -n 'matrix='  >> $GITHUB_OUTPUT
@@ -27,22 +33,13 @@ jobs:
         pset: "${{ fromJSON(needs.setup.outputs.matrix) }}"
 
     steps:
-      - name: Checkout build repo
-        uses: actions/checkout@v2
-
-      - name: Checkout gridfinity repo
-        uses: actions/checkout@master
-        with:
-          repository: kennetek/gridfinity-rebuilt-openscad
-          path: gridfinity-rebuilt-openscad
-
       - name: Create output folder if needed
         run: |
           mkdir -p stls
 
       - uses: gpmidi/openscad-build-action@main
         with:
-          input-file: gridfinity-rebuilt-openscad/gridfinity-rebuilt-bins.scad
+          input-file: gridfinity-rebuilt-openscad/gridfinity-rebuilt-baseplate.scad
           output-file: "stls/bin-${{ matrix.pset }}.stl"
           customizer-parameter-file: "params/Bins.json"
           customizer-parameter-set: "${{ matrix.pset }}"
