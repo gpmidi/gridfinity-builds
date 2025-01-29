@@ -27,7 +27,7 @@ jobs:
       - id: set-matrix
         run: |
           echo -n 'matrix='  >> $GITHUB_OUTPUT
-          cat params/Base.json | jq '.parameterSets | keys'  >> $GITHUB_OUTPUT
+          cat params/Base.json | jq  -c -r '.parameterSets | keys '  >> $GITHUB_OUTPUT
 
   build:
     needs: [ setup ]
