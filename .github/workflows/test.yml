@@ -1,0 +1,27 @@
+name: Test
+
+on:
+  pull_request:
+  push:
+    branches: [ master, main, develop ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Checkout gridfinity repo
+        uses: actions/checkout@master
+        with:
+          repository: kennetek/gridfinity-rebuilt-openscad
+      - uses: ./
+        with:
+          input-file: gridfinity-rebuilt-openscad/gridfinity-rebuilt-baseplate.scad
+          output-file: out/test.stl
+          customizer-parameter-file: params/Base.json
+          customizer-parameter-set: '5x5'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: test-stl
+          path: out/test.stl
