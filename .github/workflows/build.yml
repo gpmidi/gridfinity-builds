@@ -20,7 +20,7 @@ jobs:
           echo -n 'bases='  >> $GITHUB_OUTPUT
           cat params/Base.json | jq  -c -r '.parameterSets | keys '  >> $GITHUB_OUTPUT
           echo -n 'bins='  >> $GITHUB_OUTPUT
-          cat params/Bins.json | jq  -c -r '.parameterSets | keys '  >> $GITHUB_OUTPUT
+          cat params/Bin.json | jq  -c -r '.parameterSets | keys '  >> $GITHUB_OUTPUT
 
   bases:
     needs: [ setup ]
@@ -80,7 +80,7 @@ jobs:
         with:
           input-file: gridfinity-rebuilt-openscad/gridfinity-rebuilt-baseplate.scad
           output-file: "stls/bin-${{ matrix.pset }}.stl"
-          customizer-parameter-file: "params/Bins.json"
+          customizer-parameter-file: "params/Bin.json"
           customizer-parameter-set: "${{ matrix.pset }}"
 
       - uses: actions/upload-artifact@v4
