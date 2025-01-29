@@ -35,8 +35,9 @@ jobs:
     strategy:
       matrix:
         pset: "${{ fromJSON(needs.setup.outputs.matrix) }}"
+
     steps:
-      -
+
       - uses: gpmidi/openscad-build-action@main
         with:
           input-file: gridfinity-rebuilt-openscad/gridfinity-rebuilt-baseplate.scad
