@@ -18,10 +18,10 @@ jobs:
       - uses: gpmidi/openscad-build-action@main
         with:
           input-file: gridfinity-rebuilt-openscad/gridfinity-rebuilt-baseplate.scad
-          output-file: stls/test.stl
+          output-file: test.stl
           customizer-parameter-file: params/Base.json
           customizer-parameter-set: '5x5'
       - uses: actions/upload-artifact@v4
         with:
           name: test-stl
-          path: stls/test.stl
+          path: test.stl
