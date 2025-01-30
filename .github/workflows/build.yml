@@ -84,7 +84,7 @@ jobs:
           customizer-parameter-set: "${{ matrix.pset }}"
 
       - name: Slice & Dice
-        uses: davidk/slic3r-action/gcode@master
+        uses: gpmidi/slic3r-action/gcode@master
         env:
           BRANCH: master
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
