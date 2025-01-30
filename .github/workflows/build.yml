@@ -78,7 +78,7 @@ jobs:
 
       - uses: gpmidi/openscad-build-action@main
         with:
-          input-file: gridfinity-rebuilt-openscad/gridfinity-rebuilt-baseplate.scad
+          input-file: gridfinity-rebuilt-openscad/gridfinity-rebuilt-bins.scad
           output-file: "stls/bin-${{ matrix.pset }}.stl"
           customizer-parameter-file: "params/Bin.json"
           customizer-parameter-set: "${{ matrix.pset }}"
