@@ -83,7 +83,18 @@ jobs:
           customizer-parameter-file: "params/Bin.json"
           customizer-parameter-set: "${{ matrix.pset }}"
 
+      - name: Slice & Dice
+        uses: davidk/slic3r-action/gcode@master
+        env:
+          BRANCH: master
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SLICE_CFG: config.ini
+          EXTRA_SLICER_ARGS: "--print-center 100,100 --output-filename-format {input_filename_base}_{printer_model}.gcode"
+        with:
+          args: "stls/bin-${{ matrix.pset }}.stl"
+
       - uses: actions/upload-artifact@v4
         with:
           name: "bin-${{ matrix.pset }}"
-          path: "stls/bin-${{ matrix.pset }}.stl"
+          path: |
+            stls/bin-${{ matrix.pset }}.stl
