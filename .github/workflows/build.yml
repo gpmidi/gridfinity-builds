@@ -102,3 +102,4 @@ jobs:
           name: "bin-${{ matrix.pset }}"
           path: |
             stls/bin-${{ matrix.pset }}.stl
+            *.gcode
