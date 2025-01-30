@@ -93,6 +93,10 @@ jobs:
         with:
           args: "stls/bin-${{ matrix.pset }}.stl"
 
+      - name: Debug
+        run: |
+          ls -alhR 
+
       - uses: actions/upload-artifact@v4
         with:
           name: "bin-${{ matrix.pset }}"
