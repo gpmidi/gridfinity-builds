@@ -95,7 +95,7 @@ jobs:
       - name: Debug
         run: |          
           pwd
-          ls -alhR 
+          ls -alh . .. ../..
 
       - uses: actions/upload-artifact@v4
         with:
