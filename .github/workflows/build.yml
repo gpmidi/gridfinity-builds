@@ -50,10 +50,22 @@ jobs:
           customizer-parameter-file: "params/Base.json"
           customizer-parameter-set: "${{ matrix.pset }}"
 
+      - name: Slice & Dice
+        uses: gpmidi/slic3r-action/gcode@master
+        env:
+          BRANCH: master
+          SLICE_CFG: config.ini
+        #          EXTRA_SLICER_ARGS: ""
+        with:
+          args: "stls/bin-${{ matrix.pset }}.stl"
+
       - uses: actions/upload-artifact@v4
         with:
           name: "base-${{ matrix.pset }}"
-          path: "stls/base-${{ matrix.pset }}.stl"
+          path: |
+            stls/base-${{ matrix.pset }}.stl
+            *.gcode
+
 
   bins:
     needs: [ setup ]
@@ -91,11 +103,6 @@ jobs:
 #          EXTRA_SLICER_ARGS: ""
         with:
           args: "stls/bin-${{ matrix.pset }}.stl"
-
-      - name: Debug
-        run: |          
-          pwd
-          ls -alh . .. ../..
 
       - uses: actions/upload-artifact@v4
         with:
